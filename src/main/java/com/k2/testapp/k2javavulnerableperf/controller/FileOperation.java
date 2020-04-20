@@ -42,9 +42,9 @@ public class FileOperation {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String readFilePathByQueryParam(@RequestParam String path, @RequestParam long count) {
+    public String readFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTY;
-        if(count == 0){
+        if(count < 1){
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -58,7 +58,7 @@ public class FileOperation {
     public String readFilePathByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTY;
         long count = Long.parseLong(paramMap.get(COUNT));
-        if(count == 0){
+        if(count < 1){
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -68,9 +68,9 @@ public class FileOperation {
     }
 
     @RequestMapping(value = "/write", method = RequestMethod.GET)
-    public String writeFilePathByQueryParam(@RequestParam String path, @RequestParam long count, @RequestParam String data) {
+    public String writeFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count, @RequestParam String data) {
         String output = EMPTY;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -84,7 +84,7 @@ public class FileOperation {
     public String writeFilePathByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTY;
         long count = Long.parseLong(paramMap.get(COUNT));
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {

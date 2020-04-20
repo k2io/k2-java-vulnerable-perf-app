@@ -22,9 +22,9 @@ public class SQL {
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Billionaires getBillionaireById(@PathVariable long id, @RequestParam long count) {
+    public Billionaires getBillionaireById(@PathVariable long id, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -35,9 +35,9 @@ public class SQL {
 
     @RequestMapping(value = "/id", method = RequestMethod.GET)
     @ResponseBody
-    public Billionaires getBillionaireByIdQueryParam(@RequestParam long id, @RequestParam long count) {
+    public Billionaires getBillionaireByIdQueryParam(@RequestParam long id, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -51,7 +51,7 @@ public class SQL {
     public Billionaires getBillionaireByIdBody(@RequestParam Map<String, String> paramMap) {
         long count = Long.parseLong(paramMap.get(COUNT));
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -62,9 +62,9 @@ public class SQL {
 
     @RequestMapping(value = "/firstname/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public Billionaires getBillionaireByName(@PathVariable String name, @RequestParam long count) {
+    public Billionaires getBillionaireByName(@PathVariable String name, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -75,9 +75,9 @@ public class SQL {
 
     @RequestMapping(value = "/firstname", method = RequestMethod.GET)
     @ResponseBody
-    public Billionaires getBillionaireByNameQueryParam(@RequestParam String name, @RequestParam long count) {
+    public Billionaires getBillionaireByNameQueryParam(@RequestParam String name, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -92,7 +92,7 @@ public class SQL {
     public Billionaires getBillionaireByNameBody(@RequestParam Map<String, String> paramMap) {
         long count = Long.parseLong(paramMap.get(COUNT));
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -104,9 +104,9 @@ public class SQL {
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     @ResponseBody
     public Billionaires saveBillionaire(@Valid Billionaires billionaireToSave,
-                                        @RequestParam long count) {
+                                        @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count == 0) {
+        if (count < 1) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {

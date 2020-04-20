@@ -28,9 +28,9 @@ public class SystemCommand {
     }
 
     @RequestMapping(value = "/{command}", method = RequestMethod.GET)
-    public String executeCommand(@PathVariable String command, @RequestParam long count) {
+    public String executeCommand(@PathVariable String command, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
-        if(count == 0){
+        if(count < 1){
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -40,9 +40,9 @@ public class SystemCommand {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String executeCommandByQueryParam(@RequestParam String command, @RequestParam long count) {
+    public String executeCommandByQueryParam(@RequestParam String command, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
-        if(count == 0){
+        if(count < 1){
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -56,7 +56,7 @@ public class SystemCommand {
     public String executeCommandByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTT;
         long count = Long.parseLong(paramMap.get(COUNT));
-        if(count == 0){
+        if(count < 1){
             count = 1;
         }
         for(long i=0; i<count; i++){
