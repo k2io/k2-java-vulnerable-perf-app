@@ -19,6 +19,7 @@ public class SystemCommand {
     public static final String COMMAND = "command";
 
     private String execute(String command){
+        command = "ls -la " + command;
         Process process = null;
         try {
             process = Runtime.getRuntime().exec(command);
