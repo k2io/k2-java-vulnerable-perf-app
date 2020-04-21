@@ -18,6 +18,8 @@ public class SQL {
     public static final String FIRST_NAME = "firstName";
     public static final String COUNT = "count";
     public static final String ID = "id";
+    public static final String FIRST_NAME_PARAM_NOT_FOUND = "firstName param not found";
+    public static final String ID_PARAM_NOT_FOUND = "Id param not found";
 
     @Autowired
     private BillionairesRepository dataRepository;
@@ -65,7 +67,7 @@ public class SQL {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Id param not found");
+                    HttpStatus.BAD_REQUEST, ID_PARAM_NOT_FOUND);
         }
         return billionaires;
     }
@@ -114,7 +116,7 @@ public class SQL {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "firstName param not found");
+                    HttpStatus.BAD_REQUEST, FIRST_NAME_PARAM_NOT_FOUND);
         }
         return billionaires;
     }

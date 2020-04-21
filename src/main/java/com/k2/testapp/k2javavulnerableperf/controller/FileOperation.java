@@ -21,6 +21,7 @@ public class FileOperation {
     public static final String PATH = "path";
     public static final String ERROR_WHILE_WRITING_FILE_S_S_S = "Error while writing file %s : %s : %s";
     public static final String DATA = "data";
+    public static final String PATH_PARAM_NOT_FOUND = "'path' param not found";
 
     private String readFileData(String path){
         String data = EMPTY;
@@ -72,7 +73,7 @@ public class FileOperation {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "'path' param not found");
+                    HttpStatus.BAD_REQUEST, PATH_PARAM_NOT_FOUND);
         }
         return output;
     }
@@ -106,7 +107,7 @@ public class FileOperation {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "'path' param not found");
+                    HttpStatus.BAD_REQUEST, PATH_PARAM_NOT_FOUND);
         }
         return output;
     }

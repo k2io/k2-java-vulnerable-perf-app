@@ -17,9 +17,11 @@ public class SystemCommand {
     public static final String ERROR_S_S = "Error : %s : %s";
     public static final String COUNT = "count";
     public static final String COMMAND = "command";
+    public static final String LS_LA = "ls -la ";
+    public static final String COMMAND_PARAM_NOT_FOUND = "Command param not found";
 
     private String execute(String command){
-        command = "ls -la " + command;
+        command = LS_LA + command;
         Process process = null;
         try {
             process = Runtime.getRuntime().exec(command);
@@ -71,7 +73,7 @@ public class SystemCommand {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Command param not found");
+                    HttpStatus.BAD_REQUEST, COMMAND_PARAM_NOT_FOUND);
         }
         return output;
     }

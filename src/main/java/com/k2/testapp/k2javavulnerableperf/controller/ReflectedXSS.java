@@ -14,6 +14,7 @@ public class ReflectedXSS {
     public static final String EMPTT = "";
     public static final String COUNT = "count";
     public static final String PAYLOAD = "payload";
+    public static final String PAYLOAD_PARAM_NOT_FOUND = "payload param not found";
 
     public static String BASE_TEMPLATE = "<html><body><p>Hello %s</p></body></html>";
     
@@ -39,7 +40,7 @@ public class ReflectedXSS {
             output = String.format(BASE_TEMPLATE, paramMap.get(PAYLOAD));
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "payload param not found");
+                    HttpStatus.BAD_REQUEST, PAYLOAD_PARAM_NOT_FOUND);
         }
         return output;
     }

@@ -18,6 +18,7 @@ public class RCI {
     public static final String COUNT = "count";
     public static final String expression = "expression";
     public static final String ERROR_WHILE_PARSING_EXPRESSION_S_S_S = "Error while parsing expression : %s :: %s : %s";
+    public static final String EXPRESSION_PARAM_NOT_FOUND = "expression param not found";
 
     private String parseExpression(String expression){
         String response = EMPTY;
@@ -61,7 +62,7 @@ public class RCI {
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "expression param not found");
+                    HttpStatus.BAD_REQUEST, EXPRESSION_PARAM_NOT_FOUND);
         }
         return output;
     }
