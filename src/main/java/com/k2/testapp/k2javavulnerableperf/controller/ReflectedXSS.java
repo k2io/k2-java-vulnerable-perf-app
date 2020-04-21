@@ -16,26 +16,16 @@ public class ReflectedXSS {
     public static String BASE_TEMPLATE = "<html><body><p>Hello %s</p></body></html>";
     
     @RequestMapping(value = "/{payload}", method = RequestMethod.GET)
-    public String sendResponse(@PathVariable String payload, @RequestParam(defaultValue = "1") long count) {
+    public String sendResponse(@PathVariable String payload) {
         String output = EMPTT;
-        if(count < 1){
-            count = 1;
-        }
-        for(long i=0; i<count; i++){
-            output = String.format(BASE_TEMPLATE, payload);
-        }
+        output = String.format(BASE_TEMPLATE, payload);
         return output;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String sendResponseByQueryParam(@RequestParam String payload, @RequestParam(defaultValue = "1") long count) {
+    public String sendResponseByQueryParam(@RequestParam String payload) {
         String output = EMPTT;
-        if(count < 1){
-            count = 1;
-        }
-        for(long i=0; i<count; i++){
-            output = String.format(BASE_TEMPLATE, payload);
-        }
+        output = String.format(BASE_TEMPLATE, payload);
         return output;
     }
 
@@ -43,13 +33,7 @@ public class ReflectedXSS {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String sendResponseByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTT;
-        long count = Long.parseLong(paramMap.get(COUNT));
-        if(count < 1){
-            count = 1;
-        }
-        for(long i=0; i<count; i++){
-            output = String.format(BASE_TEMPLATE, paramMap.get(PAYLOAD));
-        }
+        output = String.format(BASE_TEMPLATE, paramMap.get(PAYLOAD));
         return output;
     }
 }
