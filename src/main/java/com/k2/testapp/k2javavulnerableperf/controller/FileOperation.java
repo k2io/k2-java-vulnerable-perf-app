@@ -1,8 +1,10 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,12 +59,20 @@ public class FileOperation {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String readFilePathByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTY;
-        long count = Long.parseLong(paramMap.get(COUNT));
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
         if(count < 1){
             count = 1;
         }
-        for(long i=0; i<count; i++){
-            output = readFileData(paramMap.get(PATH));
+        if(paramMap.containsKey(PATH)) {
+            for (long i = 0; i < count; i++) {
+                output = readFileData(paramMap.get(PATH));
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "'path' param not found");
         }
         return output;
     }
@@ -83,12 +93,20 @@ public class FileOperation {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String writeFilePathByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTY;
-        long count = Long.parseLong(paramMap.get(COUNT));
-        if (count < 1) {
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
+        if(count < 1){
             count = 1;
         }
-        for (long i = 0; i < count; i++) {
-            output = writeFileData(paramMap.get(PATH), paramMap.get(DATA));
+        if(paramMap.containsKey(PATH)) {
+            for (long i = 0; i < count; i++) {
+                output = writeFileData(paramMap.get(PATH), paramMap.get(DATA));
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "'path' param not found");
         }
         return output;
     }

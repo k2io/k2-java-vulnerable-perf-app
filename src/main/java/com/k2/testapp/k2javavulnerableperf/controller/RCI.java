@@ -3,8 +3,10 @@ package com.k2.testapp.k2javavulnerableperf.controller;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -46,12 +48,20 @@ public class RCI {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String sendResponseByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTY;
-        long count = Long.parseLong(paramMap.get(COUNT));
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
         if(count < 1){
             count = 1;
         }
-        for(long i=0; i<count; i++){
-            output = parseExpression(paramMap.get(expression));
+        if(paramMap.containsKey(expression)) {
+            for (long i = 0; i < count; i++) {
+                output = parseExpression(paramMap.get(expression));
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "expression param not found");
         }
         return output;
     }

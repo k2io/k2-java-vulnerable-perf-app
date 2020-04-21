@@ -1,7 +1,9 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -33,7 +35,12 @@ public class ReflectedXSS {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String sendResponseByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTT;
-        output = String.format(BASE_TEMPLATE, paramMap.get(PAYLOAD));
+        if(paramMap.containsKey(PAYLOAD)) {
+            output = String.format(BASE_TEMPLATE, paramMap.get(PAYLOAD));
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "payload param not found");
+        }
         return output;
     }
 }

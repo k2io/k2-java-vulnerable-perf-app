@@ -3,8 +3,10 @@ package com.k2.testapp.k2javavulnerableperf.controller;
 import com.k2.testapp.k2javavulnerableperf.model.Billionaires;
 import com.k2.testapp.k2javavulnerableperf.repository.BillionairesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map;
 @RequestMapping("/sql")
 public class SQL {
 
-    public static final String NAME = "name";
+    public static final String FIRST_NAME = "firstName";
     public static final String COUNT = "count";
     public static final String ID = "id";
 
@@ -49,13 +51,21 @@ public class SQL {
     @RequestMapping(value = "/id", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public Billionaires getBillionaireByIdBody(@RequestParam Map<String, String> paramMap) {
-        long count = Long.parseLong(paramMap.get(COUNT));
         Billionaires billionaires = null;
-        if (count < 1) {
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
+        if(count < 1){
             count = 1;
         }
-        for (long i = 0; i < count; i++) {
-            billionaires = dataRepository.findById(Long.parseLong(paramMap.get(ID))).orElseGet(Billionaires::new);
+        if(paramMap.containsKey(ID)) {
+            for (long i = 0; i < count; i++) {
+                billionaires = dataRepository.findById(Long.parseLong(paramMap.get(ID))).orElseGet(Billionaires::new);
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Id param not found");
         }
         return billionaires;
     }
@@ -90,13 +100,21 @@ public class SQL {
             , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public Billionaires getBillionaireByNameBody(@RequestParam Map<String, String> paramMap) {
-        long count = Long.parseLong(paramMap.get(COUNT));
         Billionaires billionaires = null;
-        if (count < 1) {
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
+        if(count < 1){
             count = 1;
         }
-        for (long i = 0; i < count; i++) {
-            billionaires = dataRepository.getBillionaireByName(paramMap.get(NAME));
+        if(paramMap.containsKey(FIRST_NAME)) {
+            for (long i = 0; i < count; i++) {
+                billionaires = dataRepository.getBillionaireByName(paramMap.get(FIRST_NAME));
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "firstName param not found");
         }
         return billionaires;
     }
