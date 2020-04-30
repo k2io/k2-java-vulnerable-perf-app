@@ -23,6 +23,7 @@ public class Deserialisation {
     public static final String ERROR_WHILE_DECODING_PAYLOAD_S_S_S = "Error while decoding payload : %s :: %s : %s";
     public static final String PAYLOAD_PARAM_NOT_FOUND = "payload param not found";
     public static final String DESERIALISED_OBJECT_IS_NULL = "Deserialised object is null";
+    public static final String DESERIALISED_OBJECT_IS_S_S = "Deserialised object is : %s :: %s";
 
     private String parseExpression(String encodedPayload) {
         String response = EMPTY;
@@ -32,7 +33,7 @@ public class Deserialisation {
                  ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream)) {
                 Object deserialisedObject = inputStream.readObject();
                 if(deserialisedObject != null) {
-                    response = String.format("Deserialised object is : %s :: %s", deserialisedObject.getClass(), deserialisedObject.toString());
+                    response = String.format(DESERIALISED_OBJECT_IS_S_S, deserialisedObject.getClass(), deserialisedObject.toString());
                 } else {
                     response = DESERIALISED_OBJECT_IS_NULL;
                 }
