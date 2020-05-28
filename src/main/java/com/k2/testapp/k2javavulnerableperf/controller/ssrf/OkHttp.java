@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/ssrf/googlehttpclient")
+@RequestMapping("/ssrf/okhttpclient")
 public class OkHttp {
 
     public static final String EMPTY = "";

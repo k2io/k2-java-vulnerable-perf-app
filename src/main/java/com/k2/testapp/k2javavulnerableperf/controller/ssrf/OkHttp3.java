@@ -3,8 +3,10 @@ package com.k2.testapp.k2javavulnerableperf.controller.ssrf;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/ssrf/googlehttpclient")
+@RequestMapping("/ssrf/okhttpclient3")
 public class OkHttp3 {
 
     public static final String EMPTY = "";
