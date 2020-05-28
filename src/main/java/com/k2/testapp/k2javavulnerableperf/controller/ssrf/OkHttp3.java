@@ -1,12 +1,12 @@
 package com.k2.testapp.k2javavulnerableperf.controller.ssrf;
 
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +28,10 @@ public class OkHttp3 {
     private String connect(String url) {
         String response = EMPTY;
         try {
-            Response response1 =  new OkHttpClient().newCall(new Request.Builder().get().url(url).build()).execute();
+
+            OkHttpClient client = new OkHttpClient.Builder().connectionPool(new ConnectionPool()).build();
+
+            Response response1 =  client.newCall(new Request.Builder().get().url(url).build()).execute();
             response = String.valueOf(response1.code());
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
