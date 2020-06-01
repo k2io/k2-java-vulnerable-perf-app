@@ -28,7 +28,8 @@ public class AkkaHttp {
     private String connect(String url) {
         String response = EMPTY;
         try {
-            ActorSystem system = ActorSystem.create("test-system");
+            ActorSystem system = ActorSystem.create();
+
             HttpRequest request = HttpRequest.create(url);
             CompletionStage<HttpResponse> responseFuture =
                     Http.get(system)
@@ -36,6 +37,8 @@ public class AkkaHttp {
 
             HttpResponse httpResponse = responseFuture.toCompletableFuture().get();
             response = String.valueOf(httpResponse.status().intValue());
+
+            system.terminate();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }
