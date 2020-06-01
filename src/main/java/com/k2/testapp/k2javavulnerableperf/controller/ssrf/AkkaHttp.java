@@ -4,6 +4,7 @@ import akka.actor.ActorSystem;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
+import akka.stream.ActorMaterializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +25,20 @@ public class AkkaHttp {
     public static final String url = "url";
     public static final String URL_PARAM_NOT_FOUND = "url param not found";
     public static final String ERROR_WHILE_FETCHING_URL_S_S_S = "Error while fetching url : %s : %s : %s";
+    private static  final ActorSystem system = ActorSystem.create();
+
 
     private String connect(String url) {
         String response = EMPTY;
         try {
-            ActorSystem system = ActorSystem.create();
+            ActorMaterializer materializer = ActorMaterializer.create(system);
 
             HttpRequest request = HttpRequest.create(url);
-            CompletionStage<HttpResponse> responseFuture =
-                    Http.get(system)
-                            .singleRequest(request);
+            CompletionStage<HttpResponse> responseFuture = Http.get(system).singleRequest(request);
 
             HttpResponse httpResponse = responseFuture.toCompletableFuture().get();
             response = String.valueOf(httpResponse.status().intValue());
-
-            system.terminate();
+            httpResponse.discardEntityBytes(materializer);
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }
