@@ -18,9 +18,6 @@ public class ResponseConsumer extends AsyncCharConsumer<String> {
     @Override
     protected void onCharReceived(final CharBuffer buf, final IOControl ioctrl)
             throws IOException {
-        while (buf.hasRemaining()) {
-            System.out.print(buf.get());
-        }
     }
 
     @Override
