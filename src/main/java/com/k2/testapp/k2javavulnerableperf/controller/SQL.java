@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -123,6 +124,7 @@ public class SQL {
 
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     @ResponseBody
+    @Transactional
     public Billionaires saveBillionaire(@Valid Billionaires billionaireToSave,
                                         @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
