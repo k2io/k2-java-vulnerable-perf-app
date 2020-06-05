@@ -35,7 +35,7 @@ public class SystemCommand {
     @RequestMapping(value = "/{command}", method = RequestMethod.GET)
     public String executeCommand(@PathVariable String command, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -47,7 +47,7 @@ public class SystemCommand {
     @RequestMapping(method = RequestMethod.GET)
     public String executeCommandByQueryParam(@RequestParam String command, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -64,7 +64,7 @@ public class SystemCommand {
         if(paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if(paramMap.containsKey(COMMAND)) {

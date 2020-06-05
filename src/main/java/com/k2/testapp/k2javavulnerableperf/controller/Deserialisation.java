@@ -52,7 +52,7 @@ public class Deserialisation {
         if (paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if (paramMap.containsKey(PAYLOAD)) {

@@ -36,7 +36,7 @@ public class RCI {
     @RequestMapping(method = RequestMethod.GET)
     public String sendResponseByQueryParam(@RequestParam String expression, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTY;
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for(long i=0; i<count; i++){
@@ -53,7 +53,7 @@ public class RCI {
         if(paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if(paramMap.containsKey(expression)) {

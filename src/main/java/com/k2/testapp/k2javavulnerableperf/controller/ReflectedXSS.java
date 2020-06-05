@@ -44,4 +44,12 @@ public class ReflectedXSS {
         }
         return output;
     }
+
+    @RequestMapping(value = "/{payload}/response", method = RequestMethod.GET)
+    public String sendResponse1(@PathVariable String payload) {
+
+        String output = EMPTT;
+        output = String.format(BASE_TEMPLATE, payload);
+        return output;
+    }
 }

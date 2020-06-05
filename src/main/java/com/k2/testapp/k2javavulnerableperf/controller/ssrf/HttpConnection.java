@@ -44,7 +44,7 @@ public class HttpConnection {
     @RequestMapping(method = RequestMethod.GET)
     public String connectQueryParam(@RequestParam String url, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTY;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -61,7 +61,7 @@ public class HttpConnection {
         if (paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if (paramMap.containsKey(url)) {

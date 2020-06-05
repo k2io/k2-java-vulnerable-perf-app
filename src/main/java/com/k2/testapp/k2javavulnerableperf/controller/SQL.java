@@ -29,7 +29,7 @@ public class SQL {
     @ResponseBody
     public Billionaires getBillionaireById(@PathVariable long id, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -42,7 +42,7 @@ public class SQL {
     @ResponseBody
     public Billionaires getBillionaireByIdQueryParam(@RequestParam long id, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -59,7 +59,7 @@ public class SQL {
         if(paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if(paramMap.containsKey(ID)) {
@@ -77,7 +77,7 @@ public class SQL {
     @ResponseBody
     public Billionaires getBillionaireByName(@PathVariable String name, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -90,7 +90,7 @@ public class SQL {
     @ResponseBody
     public Billionaires getBillionaireByNameQueryParam(@RequestParam String name, @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
@@ -108,7 +108,7 @@ public class SQL {
         if(paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
-        if(count < 1){
+        if (count < 1 || count > 50) {
             count = 1;
         }
         if(paramMap.containsKey(FIRST_NAME)) {
@@ -128,7 +128,7 @@ public class SQL {
     public Billionaires saveBillionaire(@Valid Billionaires billionaireToSave,
                                         @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
-        if (count < 1) {
+        if (count < 1 || count > 50) {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
