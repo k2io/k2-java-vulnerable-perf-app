@@ -25,12 +25,13 @@ public class ReflectedXSS {
         return output;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String sendResponseByQueryParam(@RequestParam String payload) {
+    @GetMapping
+    public String sendResponseByQueryParam(@RequestParam String payload, @RequestParam Map<String, String> queryParams) {
         String output = EMPTT;
         output = String.format(BASE_TEMPLATE, payload);
         return output;
     }
+
 
     @RequestMapping(method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
