@@ -124,13 +124,13 @@ public class SQL {
 
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     @ResponseBody
-    @Transactional
     public Billionaires saveBillionaire(@Valid Billionaires billionaireToSave,
                                         @RequestParam(defaultValue = "1") long count) {
         Billionaires billionaires = null;
         if (count < 1 || count > 50) {
             count = 1;
         }
+
         for (long i = 0; i < count; i++) {
             billionaires = dataRepository.save(billionaireToSave);
             dataRepository.delete(billionaires);
