@@ -33,11 +33,17 @@ public class FileOperation {
         return data;
     }
 
-    private String writeFileData(String path, String content){
+    private String writeFileData(String path, String content) {
+        return writeFileData(path, content, true);
+    }
+
+    private String writeFileData(String path, String content, boolean readAfterWrite){
         String data = EMPTY;
         try(FileOutputStream stream = new FileOutputStream(path)){
             IOUtils.write(content, stream, StandardCharsets.UTF_8);
-            data = readFileData(path);
+            if(readAfterWrite) {
+                data = readFileData(path);
+            }
         } catch (Exception e){
             data = String.format(ERROR_WHILE_WRITING_FILE_S_S_S, path, e.getMessage(), e.getCause());
         }
@@ -104,6 +110,28 @@ public class FileOperation {
         if(paramMap.containsKey(PATH)) {
             for (long i = 0; i < count; i++) {
                 output = writeFileData(paramMap.get(PATH), paramMap.get(DATA));
+            }
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, PATH_PARAM_NOT_FOUND);
+        }
+        return output;
+    }
+
+    @RequestMapping(value = "/write/blind", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String writeFilePathByBodyBlind(@RequestParam Map<String, String> paramMap) {
+        String output = EMPTY;
+        long count = 1;
+        if(paramMap.containsKey(COUNT)) {
+            count = Long.parseLong(paramMap.get(COUNT));
+        }
+        if (count < 1 || count > 50) {
+            count = 1;
+        }
+        if(paramMap.containsKey(PATH)) {
+            for (long i = 0; i < count; i++) {
+                output = writeFileData(paramMap.get(PATH), paramMap.get(DATA), false);
             }
         } else {
             throw new ResponseStatusException(
