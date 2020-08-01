@@ -5,11 +5,13 @@ import com.k2.testapp.k2javavulnerableperf.repository.BillionairesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +26,9 @@ public class SQL {
 
     @Autowired
     private BillionairesRepository dataRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -102,8 +107,8 @@ public class SQL {
     @RequestMapping(value = "/firstname", method = RequestMethod.POST
             , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public Billionaires getBillionaireByNameBody(@RequestParam Map<String, String> paramMap) {
-        Billionaires billionaires = null;
+    public List<Billionaires> getBillionaireByNameBody(@RequestParam Map<String, String> paramMap) {
+        List<Billionaires> billionaires = null;
         long count = 1;
         if(paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
@@ -113,7 +118,8 @@ public class SQL {
         }
         if(paramMap.containsKey(FIRST_NAME)) {
             for (long i = 0; i < count; i++) {
-                billionaires = dataRepository.getBillionaireByName(paramMap.get(FIRST_NAME));
+                billionaires = jdbcTemplate.query("SELECT * FROM billionaires WHERE first_name = '" + paramMap.get(FIRST_NAME) +"'",
+                        new BeanPropertyRowMapper<Billionaires>(Billionaires.class));
             }
         } else {
             throw new ResponseStatusException(
