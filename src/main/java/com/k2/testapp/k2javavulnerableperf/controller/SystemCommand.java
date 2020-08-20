@@ -1,6 +1,7 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,10 @@ public class SystemCommand {
     public static final String EMPTT = "";
     public static final String ERROR_S_S = "Error : %s : %s";
     public static final String COUNT = "count";
-    public static final String COMMAND = "command";
+    public static final String ARG = "arg";
     public static final String LS_LA = "ls -la ";
-    public static final String COMMAND_PARAM_NOT_FOUND = "Command param not found";
+    public static final String ARG_PARAM_NOT_FOUND = "arg param not found";
+    public static final String STDOUT_S_BR_STDERR_S = "STDOUT : %s <br>\r\n STDERR : %s";
 
     private String execute(String command){
         command = LS_LA + command;
@@ -26,32 +28,34 @@ public class SystemCommand {
         try {
             process = Runtime.getRuntime().exec(command);
             process.waitFor();
-            return IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
+            String stdIn = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
+            String stdErr = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
+            return String.format(STDOUT_S_BR_STDERR_S, stdIn, stdErr);
         } catch (Exception e) {
             return String.format(ERROR_S_S, e.getMessage(), e.getCause());
         }
     }
 
-    @RequestMapping(value = "/{command}", method = RequestMethod.GET)
-    public String executeCommand(@PathVariable String command, @RequestParam(defaultValue = "1") long count) {
+    @RequestMapping(value = "/{arg}", method = RequestMethod.GET)
+    public String executeCommand(@PathVariable String arg, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
         }
         for(long i=0; i<count; i++){
-            output = execute(command);
+            output = execute(arg);
         }
         return output;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String executeCommandByQueryParam(@RequestParam String command, @RequestParam(defaultValue = "1") long count) {
+    public String executeCommandByQueryParam(@RequestParam String arg, @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
         }
         for(long i=0; i<count; i++){
-            output = execute(command);
+            output = execute(arg);
         }
         return output;
     }
@@ -67,13 +71,13 @@ public class SystemCommand {
         if (count < 1 || count > 50) {
             count = 1;
         }
-        if(paramMap.containsKey(COMMAND)) {
+        if(paramMap.containsKey(ARG)) {
             for (long i = 0; i < count; i++) {
-                output = execute(paramMap.get(COMMAND));
+                output = execute(paramMap.get(ARG));
             }
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, COMMAND_PARAM_NOT_FOUND);
+                    HttpStatus.BAD_REQUEST, ARG_PARAM_NOT_FOUND);
         }
         return output;
     }
