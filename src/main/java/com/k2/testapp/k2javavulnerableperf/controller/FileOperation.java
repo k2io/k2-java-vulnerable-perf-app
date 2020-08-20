@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -136,6 +137,31 @@ public class FileOperation {
         } else {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, PATH_PARAM_NOT_FOUND);
+        }
+        return output;
+    }
+
+
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    public Boolean checkFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
+        Boolean output = false;
+        if (count < 1 || count > 50) {
+            count = 1;
+        }
+        for(long i=0; i<count; i++){
+            output = new File(path).exists();
+        }
+        return output;
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String[] listFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
+        String[] output = null;
+        if (count < 1 || count > 50) {
+            count = 1;
+        }
+        for(long i=0; i<count; i++){
+            output = new File(path).list();
         }
         return output;
     }
