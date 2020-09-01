@@ -1,5 +1,7 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/rxss")
 public class ReflectedXSS {
+
+    private static Logger logger = LoggerFactory.getLogger(ReflectedXSS.class);
 
     public static final String EMPTT = "";
     public static final String COUNT = "count";
@@ -27,6 +31,7 @@ public class ReflectedXSS {
 
     @GetMapping
     public String sendResponseByQueryParam(@RequestParam Map<String, String> queryParams) {
+        logger.info("RXSS API called : {}", queryParams);
         String output = EMPTT;
         if(queryParams.containsKey(PAYLOAD)) {
             output = String.format(BASE_TEMPLATE, queryParams.get(PAYLOAD));
