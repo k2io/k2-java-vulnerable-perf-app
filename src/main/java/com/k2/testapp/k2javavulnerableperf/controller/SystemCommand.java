@@ -1,6 +1,15 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -13,9 +22,10 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequestMapping("/rce")
 @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Successfully executed `ls` command")
+        @ApiResponse(responseCode = "200", description = "Successfully executed `ls` command")
 
 })
+@Tag(name = "System Command Controller", description = "APIs doing some risky un-validated exec calls on system.")
 public class SystemCommand {
 
     public static final String EMPTT = "";
@@ -25,12 +35,18 @@ public class SystemCommand {
     public static final String LS_LA = "ls -la ";
     public static final String ARG_PARAM_NOT_FOUND = "arg param not found";
     public static final String STDOUT_S_BR_STDERR_S = "STDOUT : %s \r\nSTDERR : %s";
+    public static final String BIN_SH = "/bin/sh";
+    public static final String C = "-c";
 
     private String execute(String command) {
-        command = LS_LA + command;
         Process process = null;
         try {
-            process = Runtime.getRuntime().exec(command);
+            String[] cmd = {
+                    BIN_SH,
+                    C,
+                    LS_LA + command
+            };
+            process = Runtime.getRuntime().exec(cmd);
             process.waitFor();
             String stdIn = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
             String stdErr = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
@@ -41,11 +57,13 @@ public class SystemCommand {
     }
 
     @RequestMapping(value = "/{arg}", method = RequestMethod.GET)
-    @ApiOperation(value = "Executes `ls` command on the given `arg` path parameter")
-    public String executeCommand(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "test")
+    @Operation(summary = "Executes `ls` command on the given `arg` path parameter")
+    public String executeCommand(@Parameter(name = "arg", description = "The argument which is supplied to `ls` command", examples = {
+            @ExampleObject(name = "Normal Case", value = "test", summary = "Normal Payload")
+    })
                                  @PathVariable String arg,
-                                 @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example= "1")
-                                 @RequestParam(defaultValue = "1") long count) {
+                                 @Parameter(name = "count", description = "Number of time this SystemCommand call is executed")
+                                 @RequestParam(defaultValue = "1") int count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
@@ -57,11 +75,15 @@ public class SystemCommand {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
-    public String executeCommandByQueryParam(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "./ ; echo $(pwd)")
+    @Operation(summary = "Executes insecure `ls` command on the given `arg` parameter")
+    public String executeCommandByQueryParam(@Parameter(name = "arg", description = "The argument which is supplied to `ls` command", examples = {
+            @ExampleObject(name = "Attack Case", value = "./ ; echo $(pwd)", summary = "Attack Payload"),
+            @ExampleObject(name = "Normal Case", value = "./", summary = "Normal Payload")
+
+    })
                                              @RequestParam String arg,
-                                             @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example= "1")
-                                             @RequestParam(defaultValue = "1") long count) {
+                                             @Parameter(name = "count", description = "Number of time this SystemCommand call is executed")
+                                             @RequestParam(defaultValue = "1") int count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
@@ -73,17 +95,18 @@ public class SystemCommand {
     }
 
 
-    @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
     @PostMapping(path = "/",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @Operation(summary = "Executes insecure `ls` command on the given `arg` parameter")
     public String executeCommandByBody(
-            @ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "./ ; echo $(pwd)")
+            @Parameter(name = "arg", description = "The argument which is supplied to `ls` command<br><br>Attack Case  : `./ ; echo $(pwd)`<br><br>Normal Case : `./`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
             String arg,
-            @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example = "1")
-            int count) {
+            @Parameter(name = "count", description = "Number of time this SystemCommand call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
+            Integer count) {
         String output = EMPTT;
 
-        if (count < 1 || count > 50) {
+        if (count == null || count < 1 || count > 50) {
             count = 1;
         }
         if (StringUtils.isNotBlank(arg)) {
