@@ -1,5 +1,6 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import com.k2.testapp.k2javavulnerableperf.model.controller.SystemCommandInput;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -68,20 +69,25 @@ public class SystemCommand {
         return output;
     }
 
-    @RequestMapping(method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String executeCommandByBody(@RequestParam Map<String, String> paramMap) {
+
+    @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully executed `ls` command")
+
+    })
+    @PostMapping(path = "/",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public String executeCommandByBody(
+                    SystemCommandInput input) {
         String output = EMPTT;
-        long count = 1;
-        if (paramMap.containsKey(COUNT)) {
-            count = Long.parseLong(paramMap.get(COUNT));
-        }
+        long count = input.getCount();
+
         if (count < 1 || count > 50) {
             count = 1;
         }
-        if (paramMap.containsKey(ARG)) {
+        if (StringUtils.isNotBlank(input.getArg())) {
             for (long i = 0; i < count; i++) {
-                output = execute(paramMap.get(ARG));
+                output = execute(input.getArg());
             }
         } else {
             throw new ResponseStatusException(
