@@ -56,6 +56,7 @@ public class SystemCommand {
     })
     public String executeCommandByQueryParam(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command")
                                              @RequestParam String arg,
+                                             @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed")
                                              @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
@@ -76,7 +77,10 @@ public class SystemCommand {
     @PostMapping(path = "/",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public String executeCommandByBody(
-                    String arg, int count) {
+            @ApiParam(name = "arg", value = "The argument which is supplied to `ls` command")
+                    String arg,
+            @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", defaultValue = "1")
+            int count) {
         String output = EMPTT;
 
         if (count < 1 || count > 50) {
