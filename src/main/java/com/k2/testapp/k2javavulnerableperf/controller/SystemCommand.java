@@ -12,6 +12,10 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/rce")
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Successfully executed `ls` command")
+
+})
 public class SystemCommand {
 
     public static final String EMPTT = "";
@@ -20,7 +24,7 @@ public class SystemCommand {
     public static final String ARG = "arg";
     public static final String LS_LA = "ls -la ";
     public static final String ARG_PARAM_NOT_FOUND = "arg param not found";
-    public static final String STDOUT_S_BR_STDERR_S = "STDOUT : %s <br>\r\n STDERR : %s";
+    public static final String STDOUT_S_BR_STDERR_S = "STDOUT : %s \r\nSTDERR : %s";
 
     private String execute(String command) {
         command = LS_LA + command;
@@ -37,7 +41,11 @@ public class SystemCommand {
     }
 
     @RequestMapping(value = "/{arg}", method = RequestMethod.GET)
-    public String executeCommand(@PathVariable String arg, @RequestParam(defaultValue = "1") long count) {
+    @ApiOperation(value = "Executes `ls` command on the given `arg` path parameter")
+    public String executeCommand(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "test")
+                                 @PathVariable String arg,
+                                 @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example= "1")
+                                 @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
@@ -50,13 +58,9 @@ public class SystemCommand {
 
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully executed `ls` command")
-
-    })
-    public String executeCommandByQueryParam(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command")
+    public String executeCommandByQueryParam(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "./ ; echo $(pwd)")
                                              @RequestParam String arg,
-                                             @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed")
+                                             @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example= "1")
                                              @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
@@ -70,16 +74,12 @@ public class SystemCommand {
 
 
     @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully executed `ls` command")
-
-    })
     @PostMapping(path = "/",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public String executeCommandByBody(
-            @ApiParam(name = "arg", value = "The argument which is supplied to `ls` command")
-                    String arg,
-            @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", defaultValue = "1")
+            @ApiParam(name = "arg", value = "The argument which is supplied to `ls` command", example= "./ ; echo $(pwd)")
+            String arg,
+            @ApiParam(name = "count", value = "Number of time this SystemCommand call is executed", example = "1")
             int count) {
         String output = EMPTT;
 
