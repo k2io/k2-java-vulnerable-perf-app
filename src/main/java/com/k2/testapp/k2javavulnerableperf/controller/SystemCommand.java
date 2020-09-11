@@ -62,7 +62,7 @@ public class SystemCommand {
             @ExampleObject(name = "Normal Case", value = "test", summary = "Normal Payload")
     })
                                  @PathVariable String arg,
-                                 @Parameter(name = "count", description = "Number of time this SystemCommand call is executed")
+                                 @Parameter(name = "count", description = "Number of time this SystemCommand call is executed", hidden = true)
                                  @RequestParam(defaultValue = "1") int count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
@@ -82,7 +82,7 @@ public class SystemCommand {
 
     })
                                              @RequestParam String arg,
-                                             @Parameter(name = "count", description = "Number of time this SystemCommand call is executed")
+                                             @Parameter(name = "count", description = "Number of time this SystemCommand call is executed", hidden = true)
                                              @RequestParam(defaultValue = "1") int count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
