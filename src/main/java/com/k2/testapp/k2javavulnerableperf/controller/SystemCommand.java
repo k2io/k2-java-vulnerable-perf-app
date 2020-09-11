@@ -1,6 +1,5 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
-import com.k2.testapp.k2javavulnerableperf.model.controller.SystemCommandInput;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/rce")
@@ -78,16 +76,15 @@ public class SystemCommand {
     @PostMapping(path = "/",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public String executeCommandByBody(
-                    SystemCommandInput input) {
+                    String arg, int count) {
         String output = EMPTT;
-        long count = input.getCount();
 
         if (count < 1 || count > 50) {
             count = 1;
         }
-        if (StringUtils.isNotBlank(input.getArg())) {
+        if (StringUtils.isNotBlank(arg)) {
             for (long i = 0; i < count; i++) {
-                output = execute(input.getArg());
+                output = execute(arg);
             }
         } else {
             throw new ResponseStatusException(
