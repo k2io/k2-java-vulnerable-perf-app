@@ -1,5 +1,6 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class SystemCommand {
     public static final String ARG_PARAM_NOT_FOUND = "arg param not found";
     public static final String STDOUT_S_BR_STDERR_S = "STDOUT : %s <br>\r\n STDERR : %s";
 
-    private String execute(String command){
+    private String execute(String command) {
         command = LS_LA + command;
         Process process = null;
         try {
@@ -42,19 +43,26 @@ public class SystemCommand {
         if (count < 1 || count > 50) {
             count = 1;
         }
-        for(long i=0; i<count; i++){
+        for (long i = 0; i < count; i++) {
             output = execute(arg);
         }
         return output;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String executeCommandByQueryParam(@RequestParam String arg, @RequestParam(defaultValue = "1") long count) {
+    @ApiOperation(value = "Executes insecure `ls` command on the given `arg` parameter")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully executed `ls` command")
+
+    })
+    public String executeCommandByQueryParam(@ApiParam(name = "arg", value = "The argument which is supplied to `ls` command")
+                                             @RequestParam String arg,
+                                             @RequestParam(defaultValue = "1") long count) {
         String output = EMPTT;
         if (count < 1 || count > 50) {
             count = 1;
         }
-        for(long i=0; i<count; i++){
+        for (long i = 0; i < count; i++) {
             output = execute(arg);
         }
         return output;
@@ -65,13 +73,13 @@ public class SystemCommand {
     public String executeCommandByBody(@RequestParam Map<String, String> paramMap) {
         String output = EMPTT;
         long count = 1;
-        if(paramMap.containsKey(COUNT)) {
+        if (paramMap.containsKey(COUNT)) {
             count = Long.parseLong(paramMap.get(COUNT));
         }
         if (count < 1 || count > 50) {
             count = 1;
         }
-        if(paramMap.containsKey(ARG)) {
+        if (paramMap.containsKey(ARG)) {
             for (long i = 0; i < count; i++) {
                 output = execute(paramMap.get(ARG));
             }
