@@ -54,7 +54,8 @@ public class OkHttp3 {
     @Operation(summary = "Sends a request to a given URL in the `url` query string field and collects the response using OK HTTP3 Client.")
     public String connectQueryParam(
             @Parameter(name = "url", description = "The string URL for the connectivity", examples = {
-                    @ExampleObject(summary = "Attack Case", value = "https://google.com", name = "Attack Payload")
+                    @ExampleObject(summary = "Attack Case", value = "https://google.com", name = "Attack Payload"),
+                    @ExampleObject(summary = "Normal Case", value = "http://localhost:8080/rxss/hello", name = "Normal Payload")
             })
             @RequestParam String url,
             @Parameter(name = "count", description = "Number of time this connection call is executed", hidden = true)
@@ -73,7 +74,7 @@ public class OkHttp3 {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Operation(summary = "Sends a request to a given URL in the `url` parameter and collects the response using OK HTTP3 Client.")
     public String connectByBody(
-            @Parameter(name = "url", description = "The string URL for the connectivity<br><br>Attack Case : `https://google.com`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            @Parameter(name = "url", description = "The string URL for the connectivity<br><br>Attack Case : `https://google.com` <br><br>Normal Case : `http://localhost:8080/rxss/hello`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
                     ,required = true)
                     String url,
             @Parameter(name = "count", description = "Number of time this connection call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
