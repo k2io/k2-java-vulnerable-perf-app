@@ -50,8 +50,10 @@ public class ReflectedXSS {
     @GetMapping
     @Operation(summary = "Reverts a welcome message with the content of `payload` parameter")
     public String sendResponseByQueryParam(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
-            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
-            })
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload"),
+            @ExampleObject(summary = "Attack Case", value = "USER <script>alert('attack')</script>", name = "Attack Payload")
+
+    })
             @RequestParam String payload
     ) {
         String output = EMPTT;
@@ -63,7 +65,7 @@ public class ReflectedXSS {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Operation(summary = "Reverts a welcome message with the content of `payload` parameter")
     public String sendResponseByBody(
-            @Parameter(name = "payload", description = "Data to construct the welcome message<br><br>Normal Case : `USER`", in= ParameterIn.DEFAULT, style = ParameterStyle.FORM
+            @Parameter(name = "payload", description = "Data to construct the welcome message<br><br>Normal Case : `USER`<br><br>Attack Case : `USER <script>alert('attack')</script>`", in= ParameterIn.DEFAULT, style = ParameterStyle.FORM
                     ,required = true)
                     String payload,
             @Parameter(name = "count", description = "Number of time this call is executed, Optional & defaults to `1`.", in= ParameterIn.DEFAULT, style = ParameterStyle.FORM)
