@@ -1,5 +1,5 @@
 ## K2 Java Vulnerable Application
-A vulnerability testing web application developed by <a href='https://www.k2io.com/'>K2 Cyber Security</a> to assess it Next-Gen Java Runtime protection technology.
+A vulnerability testing web application developed by [K2 Cyber Security](https://www.k2io.com/) to assess it Next-Gen Java Runtime protection technology.
 The application is a Spring Boot based web application using embedded H2 DB as datastore.
 
 #### Requirements :
@@ -50,7 +50,7 @@ bash ./mvnw spring-boot:run
 ```
 
 #### Accessing the application :
-The application can be accessed at the API endpoint `http://HOST_MACHINE_IP:8080/` which will show a welcome message.
+The application can be accessed at the API endpoint `http://HOST_MACHINE_IP:8080` which will show a welcome message.
 Please note this application is API only application & has no UI. 
 
 #### Documentation 
