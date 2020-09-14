@@ -1,11 +1,18 @@
 package com.k2.testapp.k2javavulnerableperf.controller.ssrf;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ssrf/commonshttpclient2")
+@Tag(name = "Apache Commons HTTP Controller", description = "APIs performing connectivity via Apache Commons HTTP Client but have some intentional vulnerabilities.")
 public class CommonsHttpClient2 {
 
     public static final String EMPTY = "";
@@ -39,7 +47,14 @@ public class CommonsHttpClient2 {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String connectQueryParam(@RequestParam String url, @RequestParam(defaultValue = "1") long count) {
+    @Operation(summary = "Sends a request to a given URL in the `url` query string field and collects the response using Apache Commons HTTP Client.")
+    public String connectQueryParam(
+            @Parameter(name = "url", description = "The string URL for the connectivity", examples = {
+                    @ExampleObject(summary = "Attack Case", value = "https://google.com", name = "Attack Payload")
+            })
+            @RequestParam String url,
+            @Parameter(name = "count", description = "Number of time this connection call is executed", hidden = true)
+            @RequestParam(defaultValue = "1") long count) {
         String output = EMPTY;
         if (count < 1 || count > 50) {
             count = 1;
@@ -52,18 +67,22 @@ public class CommonsHttpClient2 {
 
     @RequestMapping(method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String connectByBody(@RequestParam Map<String, String> paramMap) {
+    @Operation(summary = "Sends a request to a given URL in the `url` parameter and collects the response using Apache Commons HTTP Client.")
+    public String connectByBody(
+            @Parameter(name = "url", description = "The string URL for the connectivity<br><br>Attack Case : `https://google.com`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
+                    String url,
+            @Parameter(name = "count", description = "Number of time this connection call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
+                    Integer count
+    ) {
         String output = EMPTY;
-        long count = 1;
-        if (paramMap.containsKey(COUNT)) {
-            count = Long.parseLong(paramMap.get(COUNT));
-        }
-        if (count < 1 || count > 50) {
+
+        if (count == null || count < 1 || count > 50) {
             count = 1;
         }
-        if (paramMap.containsKey(url)) {
+        if (StringUtils.isNotBlank(url)) {
             for (long i = 0; i < count; i++) {
-                output = connect(paramMap.get(url));
+                output = connect(url);
             }
         } else {
             throw new ResponseStatusException(

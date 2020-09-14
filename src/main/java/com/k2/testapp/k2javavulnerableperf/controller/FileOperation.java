@@ -1,6 +1,13 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/file")
+@Tag(name = "File Controller", description = "APIs doing File operations via Java Persistence API but have some intentional vulnerabilities.")
 public class FileOperation {
 
     public static final String EMPTY = "";
@@ -52,7 +60,15 @@ public class FileOperation {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String readFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
+    @Operation(summary = "Reads the file by file path(String) given in the query string field name `path`")
+    public String readFilePathByQueryParam(
+            @Parameter(name = "path", description = "The String file path for read", examples = {
+                    @ExampleObject(summary = "Normal Case", value = "Dockerfile", name = "Normal Payload"),
+                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Attack Payload")
+            })
+            @RequestParam String path,
+            @Parameter(name = "count", description = "Number of time this File Read call is executed", hidden = true)
+            @RequestParam(defaultValue = "1") long count) {
         String output = EMPTY;
         if (count < 1 || count > 50) {
             count = 1;
@@ -65,18 +81,22 @@ public class FileOperation {
 
     @RequestMapping(method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String readFilePathByBody(@RequestParam Map<String, String> paramMap) {
+    @Operation(summary = "Reads the file by file path(String) given in the `path` request parameter")
+    public String readFilePathByBody(
+            @Parameter(name = "path", description = "The String file path for read<br><br>Normal Case : `Dockerfile`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
+                    String path,
+            @Parameter(name = "count", description = "Number of time this File Read call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
+                    Integer count
+    ) {
         String output = EMPTY;
-        long count = 1;
-        if(paramMap.containsKey(COUNT)) {
-            count = Long.parseLong(paramMap.get(COUNT));
-        }
-        if (count < 1 || count > 50) {
+
+        if (count == null || count < 1 || count > 50) {
             count = 1;
         }
-        if(paramMap.containsKey(PATH)) {
+        if(StringUtils.isNotBlank(path)) {
             for (long i = 0; i < count; i++) {
-                output = readFileData(paramMap.get(PATH));
+                output = readFileData(path);
             }
         } else {
             throw new ResponseStatusException(
@@ -86,7 +106,19 @@ public class FileOperation {
     }
 
     @RequestMapping(value = "/write", method = RequestMethod.GET)
-    public String writeFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count, @RequestParam String data) {
+    @Operation(summary = "Writes a file by file path(String) given in the query string field name `path`. Data to be written can be supplied in the string field name `data`")
+    public String writeFilePathByQueryParam(
+            @Parameter(name = "path", description = "The String file path to be written on", examples = {
+                    @ExampleObject(summary = "Normal Case", value = "sample.txt", name = "Normal Payload"),
+                    @ExampleObject(summary = "Attack Case", value = "/etc/users.txt", name = "Attack Payload")
+            })
+            @RequestParam String path,
+            @Parameter(name = "count", description = "Number of time this File Write call is executed", hidden = true)
+            @RequestParam(defaultValue = "1") long count,
+            @Parameter(name = "data", description = "The data string to be written in file specified.", examples = {
+                    @ExampleObject(summary = "Normal Case", value = "sample data", name = "Normal Payload")
+            })
+            @RequestParam String data) {
         String output = EMPTY;
         if (count < 1 || count > 50) {
             count = 1;
@@ -99,18 +131,25 @@ public class FileOperation {
 
     @RequestMapping(value = "/write", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String writeFilePathByBody(@RequestParam Map<String, String> paramMap) {
+    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path`. Data to be written can be supplied in the body by field name `data`")
+    public String writeFilePathByBody(
+            @Parameter(name = "path", description = "The String file path to be written on<br><br>Normal Case : `sample.tx`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
+                    String path,
+            @Parameter(name = "count", description = "Number of time this File Write call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
+                    Integer count,
+            @Parameter(name = "path", description = "The data string to be written in file specified.<br><br>Normal Case : `sample data`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            ,required = true)
+                    String data
+    ) {
         String output = EMPTY;
-        long count = 1;
-        if(paramMap.containsKey(COUNT)) {
-            count = Long.parseLong(paramMap.get(COUNT));
-        }
-        if (count < 1 || count > 50) {
+
+        if (count == null || count < 1 || count > 50) {
             count = 1;
         }
-        if(paramMap.containsKey(PATH)) {
+        if(StringUtils.isNotBlank(path)) {
             for (long i = 0; i < count; i++) {
-                output = writeFileData(paramMap.get(PATH), paramMap.get(DATA));
+                output = writeFileData(path, data);
             }
         } else {
             throw new ResponseStatusException(
@@ -121,18 +160,25 @@ public class FileOperation {
 
     @RequestMapping(value = "/write/blind", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String writeFilePathByBodyBlind(@RequestParam Map<String, String> paramMap) {
+    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path` and read the content of the same in response. Data to be written can be supplied in the body by field name `data`")
+    public String writeFilePathByBodyBlind(
+            @Parameter(name = "path", description = "The String file path to be written on<br><br>Normal Case : `sample.tx`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
+                    String path,
+            @Parameter(name = "count", description = "Number of time this File Write call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
+                    Integer count,
+            @Parameter(name = "path", description = "The data string to be written in file specified.<br><br>Normal Case : `sample data`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+                    ,required = true)
+                    String data
+    ) {
         String output = EMPTY;
-        long count = 1;
-        if(paramMap.containsKey(COUNT)) {
-            count = Long.parseLong(paramMap.get(COUNT));
-        }
-        if (count < 1 || count > 50) {
+
+        if (count == null || count < 1 || count > 50) {
             count = 1;
         }
-        if(paramMap.containsKey(PATH)) {
+        if(StringUtils.isNotBlank(path)) {
             for (long i = 0; i < count; i++) {
-                output = writeFileData(paramMap.get(PATH), paramMap.get(DATA), false);
+                output = writeFileData(path, data, false);
             }
         } else {
             throw new ResponseStatusException(
@@ -143,7 +189,16 @@ public class FileOperation {
 
 
     @RequestMapping(value = "/check", method = RequestMethod.GET)
-    public Boolean checkFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
+    @Operation(summary = "Checks if the file specified by file path(String) given in the query string field name `path` exists or not")
+    public Boolean checkFilePathByQueryParam(
+            @Parameter(name = "path", description = "The String file path to check", examples = {
+                    @ExampleObject(summary = "Normal Case", value = "Dockerfile", name = "Normal Payload"),
+                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Attack Payload")
+            })
+            @RequestParam String path,
+            @Parameter(name = "count", description = "Number of time this check operation is executed", hidden = true)
+            @RequestParam(defaultValue = "1") long count
+    ) {
         Boolean output = false;
         if (count < 1 || count > 50) {
             count = 1;
@@ -155,7 +210,16 @@ public class FileOperation {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String[] listFilePathByQueryParam(@RequestParam String path, @RequestParam(defaultValue = "1") long count) {
+    @Operation(summary = "List all the files present in directory path(String) given in the query string field name `path`.")
+    public String[] listFilePathByQueryParam(
+            @Parameter(name = "path", description = "The String directory path to list", examples = {
+                    @ExampleObject(summary = "Normal Case", value = ".", name = "Normal Payload"),
+                    @ExampleObject(summary = "Attack Case", value = "/etc", name = "Attack Payload")
+            })
+            @RequestParam String path,
+            @Parameter(name = "count", description = "Number of time this list files operation is executed", hidden = true)
+            @RequestParam(defaultValue = "1") long count
+    ) {
         String[] output = null;
         if (count < 1 || count > 50) {
             count = 1;
