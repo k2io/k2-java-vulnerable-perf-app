@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/file")
-@Tag(name = "File Controller", description = "APIs doing File operations via Java Persistence API but have some intentional vulnerabilities.")
+@Tag(name = "File Controller", description = "APIs doing File operations via Java built-in APIs but have some intentional vulnerabilities.")
 public class FileOperation {
 
     public static final String EMPTY = "";
