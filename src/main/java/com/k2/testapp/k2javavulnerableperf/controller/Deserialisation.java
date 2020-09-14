@@ -1,5 +1,6 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/deserialise")
+@Hidden
 public class Deserialisation {
 
     public static final String EMPTY = "";
