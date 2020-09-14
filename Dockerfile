@@ -1,5 +1,4 @@
-#FROM nimmis/java-centos:openjdk-8-jre
-FROM adoptopenjdk/openjdk8:centos
+FROM adoptopenjdk/openjdk8:centos-jre
 
 MAINTAINER harshit@k2io.com
 
