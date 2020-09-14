@@ -1,4 +1,6 @@
-FROM nimmis/java-centos:openjdk-8-jre
+#FROM nimmis/java-centos:openjdk-8-jre
+FROM adoptopenjdk/openjdk8:centos
+
 MAINTAINER harshit@k2io.com
 
 COPY target/k2-java-vulnerable-perf-1.0.0.jar /k2-java-vulnerable-perf-1.0.0.jar
