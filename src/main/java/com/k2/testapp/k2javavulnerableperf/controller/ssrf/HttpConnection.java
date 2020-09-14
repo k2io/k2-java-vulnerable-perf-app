@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -25,7 +27,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ssrf/httpconnection")
-@Tag(name = "Java HTTP URL Connection Controller", description = "APIs performing connectivity via Java HttpURLConnection but have some intentional vulnerabilities.")
+@Tag(name = "SSRF Controller", description = "APIs performing connectivity via HTTP Clients but have some intentional vulnerabilities.")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Outbound HTTP request operation successful")
+})
 public class HttpConnection {
 
     public static final String EMPTY = "";

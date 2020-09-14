@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +23,9 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequestMapping("/file")
 @Tag(name = "File Controller", description = "APIs doing File operations via Java built-in APIs but have some intentional vulnerabilities.")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "File Operation successful")
+})
 public class FileOperation {
 
     public static final String EMPTY = "";

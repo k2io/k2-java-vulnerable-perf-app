@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -23,7 +25,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ssrf/apachehttp4")
-@Tag(name = "Apache HTTP Controller", description = "APIs performing connectivity via Apache HTTP Client but have some intentional vulnerabilities.")
+@Tag(name = "SSRF Controller", description = "APIs performing connectivity via HTTP Clients but have some intentional vulnerabilities.")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Outbound HTTP request operation successful")
+})
 public class ApacheHttp4 {
 
     public static final String EMPTY = "";
