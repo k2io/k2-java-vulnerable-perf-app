@@ -31,7 +31,6 @@ import java.util.Map;
 @Tag(name = "SQL Controller", description = "APIs doing SQL calls via Java Persistence API but have some intentional vulnerabilities.")
 public class SQL {
 
-    public static final String FIRST_NAME = "firstName";
     public static final String COUNT = "count";
     public static final String ID = "id";
     public static final String FIRST_NAME_PARAM_NOT_FOUND = "firstName param not found";
@@ -150,11 +149,11 @@ public class SQL {
     @RequestMapping(value = "/firstname", method = RequestMethod.POST
             , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    @Operation(summary = "Does an SQL query to get record by firstname(string) given in the `name` parameter")
+    @Operation(summary = "Does an SQL query to get record by firstname(string) given in the `firstname` parameter")
     public List<Billionaires> getBillionaireByNameBody(
-            @Parameter(name = "name", description = "The firstname for the record search<br><br>Attack Case  : `Aliko' OR '1'='1`<br><br>Normal Case : `Aliko`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            @Parameter(name = "firstName", description = "The firstname for the record search<br><br>Attack Case  : `Aliko' OR '1'='1`<br><br>Normal Case : `Aliko`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
                     ,required = true)
-                    String name,
+                    String firstName,
             @Parameter(name = "count", description = "Number of time this SQL call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
                     Integer count
     ) {
@@ -162,9 +161,9 @@ public class SQL {
         if (count == null || count < 1 || count > 50) {
             count = 1;
         }
-        if (StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(firstName)) {
             for (long i = 0; i < count; i++) {
-                billionaires = jdbcTemplate.query("SELECT * FROM billionaires WHERE first_name = '" + name + "'",
+                billionaires = jdbcTemplate.query("SELECT * FROM billionaires WHERE first_name = '" + firstName + "'",
                         new BeanPropertyRowMapper<Billionaires>(Billionaires.class));
             }
         } else {
