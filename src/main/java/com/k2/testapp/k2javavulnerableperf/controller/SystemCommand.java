@@ -95,8 +95,7 @@ public class SystemCommand {
     }
 
 
-    @PostMapping(path = "/",
-            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     @Operation(summary = "Executes insecure `ls` command on the given `arg` parameter")
     public String executeCommandByBody(
             @Parameter(name = "arg", description = "The argument which is supplied to `ls` command<br><br>Attack Case  : `./ ; echo $(pwd)`<br><br>Normal Case : `./`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
