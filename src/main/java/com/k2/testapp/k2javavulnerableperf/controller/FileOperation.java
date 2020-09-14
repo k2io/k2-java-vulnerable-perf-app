@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/file")
@@ -62,9 +61,9 @@ public class FileOperation {
     @RequestMapping(method = RequestMethod.GET)
     @Operation(summary = "Reads the file by file path(String) given in the query string field name `path`")
     public String readFilePathByQueryParam(
-            @Parameter(name = "path", description = "The String file path for read", examples = {
+            @Parameter(name = "path", description = "The file path for read", examples = {
                     @ExampleObject(summary = "Normal Case", value = "Dockerfile", name = "Normal Payload"),
-                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Attack Payload")
+                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Accessing file outside application context via absolute path.")
             })
             @RequestParam String path,
             @Parameter(name = "count", description = "Number of time this File Read call is executed", hidden = true)
@@ -83,7 +82,7 @@ public class FileOperation {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Operation(summary = "Reads the file by file path(String) given in the `path` request parameter")
     public String readFilePathByBody(
-            @Parameter(name = "path", description = "The String file path for read<br><br>Normal Case : `Dockerfile`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            @Parameter(name = "path", description = "The file path for read<br><br>Normal Case : `Dockerfile`<br><br>Attack Case : `/etc/passwd` accessing file outside application context via absolute path.", in= ParameterIn.QUERY, style = ParameterStyle.FORM
                     ,required = true)
                     String path,
             @Parameter(name = "count", description = "Number of time this File Read call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
@@ -108,9 +107,9 @@ public class FileOperation {
     @RequestMapping(value = "/write", method = RequestMethod.GET)
     @Operation(summary = "Writes a file by file path(String) given in the query string field name `path`. Data to be written can be supplied in the string field name `data`")
     public String writeFilePathByQueryParam(
-            @Parameter(name = "path", description = "The String file path to be written on", examples = {
+            @Parameter(name = "path", description = "The file path to be written on", examples = {
                     @ExampleObject(summary = "Normal Case", value = "sample.txt", name = "Normal Payload"),
-                    @ExampleObject(summary = "Attack Case", value = "/etc/users.txt", name = "Attack Payload")
+                    @ExampleObject(summary = "Attack Case", value = "/tmp/users.txt", name = "Accessing file outside application context via absolute path.")
             })
             @RequestParam String path,
             @Parameter(name = "count", description = "Number of time this File Write call is executed", hidden = true)
@@ -131,9 +130,9 @@ public class FileOperation {
 
     @RequestMapping(value = "/write", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path`. Data to be written can be supplied in the body by field name `data`")
+    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path` and read back the content of the same in response. Data to be written can be supplied in the body by field name `data`")
     public String writeFilePathByBody(
-            @Parameter(name = "path", description = "The String file path to be written on<br><br>Normal Case : `sample.tx`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            @Parameter(name = "path", description = "The file path to be written on<br><br>Normal Case : `sample.txt`<br><br>Attack Case : `/tmp/users.txt` accessing file outside application context via absolute path.", in= ParameterIn.QUERY, style = ParameterStyle.FORM
                     ,required = true)
                     String path,
             @Parameter(name = "count", description = "Number of time this File Write call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
@@ -160,9 +159,9 @@ public class FileOperation {
 
     @RequestMapping(value = "/write/blind", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path` and read the content of the same in response. Data to be written can be supplied in the body by field name `data`")
+    @Operation(summary = "Writes a file by file path(String) given in the body by field name `path`. Data to be written can be supplied in the body by field name `data`")
     public String writeFilePathByBodyBlind(
-            @Parameter(name = "path", description = "The String file path to be written on<br><br>Normal Case : `sample.tx`", in= ParameterIn.QUERY, style = ParameterStyle.FORM
+            @Parameter(name = "path", description = "The file path to be written on<br><br>Normal Case : `sample.txt`<br><br>Attack Case : `/tmp/users.txt` accessing file outside application context via absolute path.", in= ParameterIn.QUERY, style = ParameterStyle.FORM
                     ,required = true)
                     String path,
             @Parameter(name = "count", description = "Number of time this File Write call is executed, Optional & defaults to `1`.", in= ParameterIn.QUERY, style = ParameterStyle.FORM)
@@ -191,9 +190,9 @@ public class FileOperation {
     @RequestMapping(value = "/check", method = RequestMethod.GET)
     @Operation(summary = "Checks if the file specified by file path(String) given in the query string field name `path` exists or not")
     public Boolean checkFilePathByQueryParam(
-            @Parameter(name = "path", description = "The String file path to check", examples = {
+            @Parameter(name = "path", description = "The file path to check", examples = {
                     @ExampleObject(summary = "Normal Case", value = "Dockerfile", name = "Normal Payload"),
-                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Attack Payload")
+                    @ExampleObject(summary = "Attack Case", value = "/etc/passwd", name = "Accessing file outside application context via absolute path.")
             })
             @RequestParam String path,
             @Parameter(name = "count", description = "Number of time this check operation is executed", hidden = true)
@@ -212,9 +211,9 @@ public class FileOperation {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @Operation(summary = "List all the files present in directory path(String) given in the query string field name `path`.")
     public String[] listFilePathByQueryParam(
-            @Parameter(name = "path", description = "The String directory path to list", examples = {
+            @Parameter(name = "path", description = "The directory path to list", examples = {
                     @ExampleObject(summary = "Normal Case", value = ".", name = "Normal Payload"),
-                    @ExampleObject(summary = "Attack Case", value = "/etc", name = "Attack Payload")
+                    @ExampleObject(summary = "Attack Case", value = "/etc", name = "Accessing file outside application context via absolute path.")
             })
             @RequestParam String path,
             @Parameter(name = "count", description = "Number of time this list files operation is executed", hidden = true)
