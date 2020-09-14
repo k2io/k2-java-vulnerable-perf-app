@@ -20,6 +20,13 @@ public class Billionaires {
 
     public Billionaires() { }
 
+    public Billionaires(Billionaires billionaires) {
+        this.setFirstName(billionaires.firstName);
+        this.setLastName(billionaires.lastName);
+        this.setCareer(billionaires.career);
+    }
+
+
     public long getId() {
         return id;
     }
