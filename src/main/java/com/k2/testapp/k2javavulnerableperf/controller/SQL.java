@@ -47,7 +47,7 @@ public class SQL {
     @ResponseBody
     @Operation(summary = "Does an SQL query to get record by id(int) given in the `id` path parameter")
     public Billionaires getBillionaireById(@Parameter(name = "id", description = "The integer ID for the record search", examples = {
-            @ExampleObject(name = "Normal Case", value = "1", summary = "Normal Payload")
+            @ExampleObject(summary = "Normal Case", value = "1", name = "Normal Payload")
             }) @PathVariable long id,
                @Parameter(name = "count", description = "Number of time this SQL call is executed", hidden = true)
                @RequestParam(defaultValue = "1") long count) {
@@ -66,7 +66,7 @@ public class SQL {
     @Operation(summary = "Does an SQL query to get record by id(int) given in the `id` parameter")
     public Billionaires getBillionaireByIdQueryParam(
             @Parameter(name = "id", description = "The integer ID for the record search", examples = {
-                    @ExampleObject(name = "Normal Case", value = "1", summary = "Normal Payload")
+                    @ExampleObject(summary = "Normal Case", value = "1", name = "Normal Payload")
             })
             @RequestParam long id,
             @Parameter(name = "count", description = "Number of time this SQL call is executed", hidden = true)
@@ -112,7 +112,7 @@ public class SQL {
     @Operation(summary = "Does an SQL query to get record by firstname(string) given in the `name` path parameter")
     public Billionaires getBillionaireByName(
             @Parameter(name = "name", description = "The firstname for the record search", examples = {
-                    @ExampleObject(name = "Normal Case", value = "Aliko", summary = "Normal Payload")
+                    @ExampleObject(summary = "Normal Case", value = "Aliko", name = "Normal Payload")
             })
             @PathVariable String name,
             @Parameter(name = "count", description = "Number of time this SQL call is executed", hidden = true)
@@ -132,7 +132,7 @@ public class SQL {
     @Operation(summary = "Does an SQL query to get record by firstname(string) given in the `name` parameter")
     public Billionaires getBillionaireByNameQueryParam(
             @Parameter(name = "name", description = "The firstname for the record search", examples = {
-                    @ExampleObject(name = "Normal Case", value = "Aliko", summary = "Normal Payload")
+                    @ExampleObject(summary = "Normal Case", value = "Aliko", name = "Normal Payload")
             })
             @RequestParam String name,
             @Parameter(name = "count", description = "Number of time this SQL call is executed", hidden = true)
@@ -179,13 +179,13 @@ public class SQL {
     @Operation(summary = "Does an SQL query to save given record")
 
     public Billionaires saveBillionaire( @Parameter(name = "firstName", description = "Firstname for the record save", examples = {
-                 @ExampleObject(name = "Normal Case", value = "Aliko", summary = "Normal Payload")
+                 @ExampleObject(summary = "Normal Case", value = "Aliko", name = "Normal Payload")
          }) @RequestParam String firstName,
          @Parameter(name = "lastName", description = "LastName for the record save", examples = {
-                 @ExampleObject(name = "Normal Case", value = "Dangote", summary = "Normal Payload")
+                 @ExampleObject(summary = "Normal Case", value = "Dangote", name = "Normal Payload")
          }) @RequestParam String lastName,
          @Parameter(name = "career", description = "Career for the record save", examples = {
-                 @ExampleObject(name = "Normal Case", value = "Billionaire Industrialist", summary = "Normal Payload")
+                 @ExampleObject(summary = "Normal Case", value = "Billionaire Industrialist", name = "Normal Payload")
          }) @RequestParam String career,
          @Parameter(name = "count", description = "Number of time this SQL call is executed", hidden = true)
          @RequestParam(defaultValue = "1") long count) {

@@ -59,7 +59,7 @@ public class SystemCommand {
     @RequestMapping(value = "/{arg}", method = RequestMethod.GET)
     @Operation(summary = "Executes `ls` command on the given `arg` path parameter")
     public String executeCommand(@Parameter(name = "arg", description = "The argument which is supplied to `ls` command", examples = {
-            @ExampleObject(name = "Normal Case", value = "test", summary = "Normal Payload")
+            @ExampleObject(summary = "Normal Case", value = "test", name  = "Normal Payload")
     })
                                  @PathVariable String arg,
                                  @Parameter(name = "count", description = "Number of time this SystemCommand call is executed", hidden = true)
@@ -77,8 +77,8 @@ public class SystemCommand {
     @RequestMapping(method = RequestMethod.GET)
     @Operation(summary = "Executes insecure `ls` command on the given `arg` parameter")
     public String executeCommandByQueryParam(@Parameter(name = "arg", description = "The argument which is supplied to `ls` command", examples = {
-            @ExampleObject(name = "Attack Case", value = "./ ; echo $(pwd)", summary = "Attack Payload"),
-            @ExampleObject(name = "Normal Case", value = "./", summary = "Normal Payload")
+            @ExampleObject(summary = "Attack Case", value = "./ ; echo $(pwd)", name = "Attack Payload"),
+            @ExampleObject(summary = "Normal Case", value = "./", name = "Normal Payload")
 
     })
                                              @RequestParam String arg,

@@ -39,7 +39,7 @@ public class ReflectedXSS {
     @Operation(summary = "Reverts a welcome message with the content of `payload` path parameter")
     public String sendResponse(
             @Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
-                    @ExampleObject(name = "Normal Case", value = "USER", summary = "Normal Payload")
+                    @ExampleObject( summary  = "Normal Case", value = "USER", name = "Normal Payload")
             })
             @PathVariable String payload) {
         String output = EMPTT;
@@ -50,7 +50,7 @@ public class ReflectedXSS {
     @GetMapping
     @Operation(summary = "Reverts a welcome message with the content of `payload` parameter")
     public String sendResponseByQueryParam(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
-            @ExampleObject(name = "Normal Case", value = "USER", summary = "Normal Payload")
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
             })
             @RequestParam String payload
     ) {
@@ -83,7 +83,7 @@ public class ReflectedXSS {
     @Operation(summary = "Reverts a welcome message with the content of `payload` path parameter")
     public String sendResponse1(
             @Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
-                    @ExampleObject(name = "Normal Case", value = "USER", summary = "Normal Payload")
+                    @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
             })
             @PathVariable String payload) {
 
@@ -95,7 +95,7 @@ public class ReflectedXSS {
     @RequestMapping(value = "/encoded", method = RequestMethod.GET)
     @Operation(summary = "Reverts a welcome message with the content of `payload` parameter in URL encoded format")
     public String sendResponseURLEncoded(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
-            @ExampleObject(name = "Normal Case", value = "USER", summary = "Normal Payload")
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
             })
             @RequestParam String payload
     ) {
