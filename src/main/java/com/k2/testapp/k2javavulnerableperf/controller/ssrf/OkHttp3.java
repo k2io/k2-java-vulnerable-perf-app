@@ -46,7 +46,7 @@ public class OkHttp3 {
 
             Response response1 =  client.newCall(new Request.Builder().get().url(url).build()).execute();
             response = String.valueOf(response1.code());
-            if(response1.body() != null) {
+            if( response1 != null && response1.body() != null) {
                 response1.body().close();
             }
         } catch (Exception e) {

@@ -47,6 +47,7 @@ public class HttpConnection {
             connection.setRequestMethod("GET");
             connection.connect();
             response = String.valueOf(connection.getResponseCode());
+            connection.getInputStream().close();
             connection.disconnect();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
