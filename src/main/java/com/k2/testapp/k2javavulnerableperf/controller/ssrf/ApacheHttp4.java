@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,7 @@ public class ApacheHttp4 {
             HttpResponse httpResponse = client.execute(new HttpGet(url));
             int statusCode = httpResponse.getStatusLine().getStatusCode();
             response = String.valueOf(statusCode);
+            EntityUtils.consume(httpResponse.getEntity());
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }

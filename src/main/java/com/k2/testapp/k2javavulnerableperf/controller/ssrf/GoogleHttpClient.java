@@ -4,6 +4,7 @@ package com.k2.testapp.k2javavulnerableperf.controller.ssrf;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,7 +46,9 @@ public class GoogleHttpClient {
                     = new NetHttpTransport().createRequestFactory();
             HttpRequest request = requestFactory.buildGetRequest(
                     new GenericUrl(url));
-            response = String.valueOf(request.execute().getStatusCode());
+            HttpResponse httpResponse = request.execute();
+            response = String.valueOf(httpResponse.getStatusCode());
+            httpResponse.disconnect();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }
