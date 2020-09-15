@@ -10,6 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @SpringBootApplication
 public class K2JavaVulnerablePerfApplication {
 
@@ -26,8 +29,12 @@ public class K2JavaVulnerablePerfApplication {
                                 .title("K2 Java Vulnerable Application")
                                 .version(appVersion)
                                 .description(
-                                "A vulnerability testing web application developed by <a href='https://www.k2io.com/'>K2 Cyber Security</a> to assess it Next-Gen Java Runtime protection technology.")
-                                .license(new License().name("Apache 2.0")
-                                .url("https://www.apache.org/licenses/LICENSE-2.0")));
+                                "A vulnerability testing web application developed by <a href='https://www.k2io.com/'>K2 Cyber Security</a> to assess it Next-Gen Java Runtime protection technology." +
+                                        String.format("<br><br><b>© %s, K2 Cyber Security Inc. | All Rights Reserved | <a href=\"https://www.k2io.com/term-and-condition/\">Terms & Condition</a></b>", Calendar.getInstance().get(Calendar.YEAR))
+
+
+                                )
+
+                );
     }
 }
