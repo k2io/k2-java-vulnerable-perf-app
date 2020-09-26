@@ -38,12 +38,11 @@ public class GoogleHttpClient {
     public static final String url = "url";
     public static final String URL_PARAM_NOT_FOUND = "url param not found";
     public static final String ERROR_WHILE_FETCHING_URL_S_S_S = "Error while fetching url : %s : %s : %s";
+    private final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
 
     private String connect(String url) {
         String response = EMPTY;
         try {
-            HttpRequestFactory requestFactory
-                    = new NetHttpTransport().createRequestFactory();
             HttpRequest request = requestFactory.buildGetRequest(
                     new GenericUrl(url));
             HttpResponse httpResponse = request.execute();

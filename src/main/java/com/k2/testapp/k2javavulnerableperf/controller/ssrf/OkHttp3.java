@@ -37,13 +37,11 @@ public class OkHttp3 {
     public static final String url = "url";
     public static final String URL_PARAM_NOT_FOUND = "url param not found";
     public static final String ERROR_WHILE_FETCHING_URL_S_S_S = "Error while fetching url : %s : %s : %s";
+    private final OkHttpClient client = new OkHttpClient.Builder().connectionPool(new ConnectionPool()).build();
 
     private String connect(String url) {
         String response = EMPTY;
         try {
-
-            OkHttpClient client = new OkHttpClient.Builder().connectionPool(new ConnectionPool()).build();
-
             Response response1 =  client.newCall(new Request.Builder().get().url(url).build()).execute();
             response = String.valueOf(response1.code());
             if( response1 != null && response1.body() != null) {

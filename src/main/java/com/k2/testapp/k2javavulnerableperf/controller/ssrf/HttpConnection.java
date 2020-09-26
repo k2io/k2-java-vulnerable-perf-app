@@ -70,7 +70,7 @@ public class HttpConnection {
             count = 1;
         }
         for (long i = 0; i < count; i++) {
-            output = connect(url);
+            output =  connect(url);
         }
         return output;
     }
