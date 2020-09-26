@@ -45,6 +45,7 @@ public class CommonsHttpClient2 {
         try {
             HttpMethod httpMethod = new GetMethod(url);
             response = String.valueOf(client.executeMethod(httpMethod));
+            httpMethod.releaseConnection();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }
