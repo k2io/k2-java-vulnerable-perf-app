@@ -46,7 +46,9 @@ public class OkHttp3 {
             response = String.valueOf(response1.code());
             if( response1 != null && response1.body() != null) {
                 response1.body().close();
+
             }
+            client.connectionPool().evictAll();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
         }
