@@ -119,4 +119,17 @@ public class ReflectedXSS {
         }
         return output;
     }
+
+    @RequestMapping(value = "/header", method = RequestMethod.GET)
+    @Operation(summary = "Reverts a welcome message with the content of `payload` header parameter ")
+    public String sendResponseHeader(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
+    })
+         @RequestHeader String payload
+    ) {
+
+        String output = String.format(BASE_TEMPLATE, payload);
+
+        return output;
+    }
 }
