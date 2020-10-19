@@ -50,6 +50,7 @@ public class SystemCommand {
             process.waitFor();
             String stdIn = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
             String stdErr = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
+            process.destroyForcibly();
             return String.format(STDOUT_S_BR_STDERR_S, stdIn, stdErr);
         } catch (Exception e) {
             return String.format(ERROR_S_S, e.getMessage(), e.getCause());
