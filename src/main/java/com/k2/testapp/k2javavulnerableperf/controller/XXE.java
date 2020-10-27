@@ -56,24 +56,31 @@ public class XXE {
                     @ExampleObject(summary = "Normal Case", value = "User", name = "Providing a simple string to be inserted into predefined doc."),
                     @ExampleObject(summary = "Attack Case", value = "Content of \"/etc/passwd\" :: <xi:include href=\"file:///etc/passwd\" parse=\"text\"/>", name = "This payload tried to exploit include directive from current namespace & tries to include the content of /etc/passwd file to see it in the response")
             })
-            @RequestParam String arg) {
+            @RequestParam String arg,
+            @Parameter(name = "count", description = "Number of time this call is executed", hidden = true)
+            @RequestParam(defaultValue = "1") Integer count) {
         String output = StringUtils.EMPTY;
-        if (StringUtils.isNotBlank(arg)) {
-            output = String.format(XML_DATA, arg);
-            try {
-                Document doc = getDocument(output);
-                DOMSource source = new DOMSource(doc);
-                StringWriter writer = new StringWriter();
-                StreamResult result = new StreamResult(writer);
-                TransformerFactory.newInstance().newTransformer().transform(source, result);
-                output = writer.toString();
-            } catch (Exception e) {
-                return String.format(ERROR_S_S, e.getMessage(), e.getCause());
-            }
+        if (count == null || count < 1 || count > 50) {
+            count = 1;
+        }
+        for(int i=0; i< count; i++) {
+            if (StringUtils.isNotBlank(arg)) {
+                output = String.format(XML_DATA, arg);
+                try {
+                    Document doc = getDocument(output);
+                    DOMSource source = new DOMSource(doc);
+                    StringWriter writer = new StringWriter();
+                    StreamResult result = new StreamResult(writer);
+                    TransformerFactory.newInstance().newTransformer().transform(source, result);
+                    output = writer.toString();
+                } catch (Exception e) {
+                    return String.format(ERROR_S_S, e.getMessage(), e.getCause());
+                }
 
-        } else {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ARG_PARAM_NOT_FOUND);
+            } else {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, ARG_PARAM_NOT_FOUND);
+            }
         }
         return output;
     }
