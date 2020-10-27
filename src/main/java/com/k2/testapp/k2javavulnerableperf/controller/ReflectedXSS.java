@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -95,8 +96,8 @@ public class ReflectedXSS {
     }
 
     @RequestMapping(value = "/encoded", method = RequestMethod.GET)
-    @Operation(summary = "Reverts a welcome message with the content of `payload` parameter in URL encoded format")
-    public String sendResponseURLEncoded(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
+    @Operation(summary = "Reverts a welcome message with the content of `payload` parameter in HTML encoded format")
+    public String sendResponseHTMLEncoded(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
             @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
             })
             @RequestParam String payload
@@ -106,10 +107,10 @@ public class ReflectedXSS {
 
         if (StringUtils.isNotBlank(payload)) {
             try {
-                output = URLEncoder.encode(payload, StandardCharsets.UTF_8.name());
+                output = HtmlUtils.htmlEscape(payload, StandardCharsets.UTF_8.name());
                 output = String.format(BASE_TEMPLATE, output);
 
-            } catch (UnsupportedEncodingException e) {
+            } catch (Exception e) {
                 throw new ResponseStatusException(
                         HttpStatus.UNPROCESSABLE_ENTITY, String.format(UNABLE_TO_URL_DECODE_THE_INPUT_S,  payload));
             }
