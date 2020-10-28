@@ -35,6 +35,12 @@ public class Hash {
                     @ExampleObject(summary = "Normal Case", value = "hello", name = "Providing a simple string to be hashed.")
             })
             @RequestParam String arg,
+            @Parameter(name = "algorithm", description = "Algorithm to be used for hashing. This field will accept all the natively provided hashing algorithm in Java Runtime", examples = {
+                    @ExampleObject(summary = "Normal Case", value = "sha-256", name = "Providing a strong hashing algorithm."),
+                    @ExampleObject(summary = "Weak Case", value = "md5", name = "Providing a weak hashing algorithm.")
+
+            })
+            @RequestParam String algorithm,
             @Parameter(name = "count", description = "Number of time this call is executed", hidden = true)
             @RequestParam(defaultValue = "1") Integer count) {
         String output = StringUtils.EMPTY;
@@ -44,7 +50,7 @@ public class Hash {
         for (int i = 0; i < count; i++) {
             if (StringUtils.isNotBlank(arg)) {
                 try {
-                    MessageDigest md = MessageDigest.getInstance("MD5");
+                    MessageDigest md = MessageDigest.getInstance(algorithm);
                     output = Base64Utils.encodeToString(md.digest(arg.getBytes()));
                 } catch (Exception e) {
                     return String.format(ERROR_S_S, e.getMessage(), e.getCause());
