@@ -57,4 +57,6 @@ Please note this application is API only application & has no UI.
 This application comes with an extensive & interactive OpenAPI 3 documentation for all its supported APIs.
 The same can be found at `http://HOST_MACHINE_IP:8080/docs` .
 
-Kindly use the above link to interact with the application via OpenAPI 3 interactive documentation. 
+Kindly use the above link to interact with the application via OpenAPI 3 interactive documentation.
+
+Postman Collection can be found it : https://www.getpostman.com/collections/2f8fb073ae3958a017ac 
