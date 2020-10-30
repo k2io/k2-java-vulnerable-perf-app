@@ -28,8 +28,8 @@ public class Hash {
     private static final String ARG_PARAM_NOT_FOUND = "arg param not found";
     public static final String ERROR_S_S = "Error : %s : %s";
 
-    @RequestMapping(method = RequestMethod.GET, path = "/md5")
-    @Operation(summary = "Does a MD5 hashing (considered a weak hashing algorithm) on user defined argument given in `arg` parameter & reverts with response of the hashed data in Base64 encoding.")
+    @RequestMapping(method = RequestMethod.GET)
+    @Operation(summary = "Does a hashing (user defined algorithm given in `algorithm`) on user defined argument given in `arg` parameter & reverts with response of the hashed data in Base64 encoding.")
     public String sendResponseByQueryParam(
             @Parameter(name = "arg", description = "User input to be used for hashing", examples = {
                     @ExampleObject(summary = "Normal Case", value = "hello", name = "Providing a simple string to be hashed.")
