@@ -39,7 +39,7 @@ public class ReflectedXSS {
             "accept-language", "connection", "cookie", "k2-fuzz-request-id", "user-agent", "host", "origin", "referer"
     ));
 
-    public static final String S_BR_FOLLOWING_IS_THE_LIST_OF_UNEXPECTED_HEADERS_ARE_S = "%s<br>Following is the list of unexpected headers are : %s";
+    public static final String S_BR_FOLLOWING_IS_THE_LIST_OF_UNEXPECTED_HEADERS_ARE_S = "%s<br>Following are the unexpected headers : %s";
 
     public static String BASE_TEMPLATE = "<html><body><p>Hello %s</p></body></html>";
 
