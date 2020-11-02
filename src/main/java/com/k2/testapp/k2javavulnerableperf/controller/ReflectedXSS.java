@@ -1,5 +1,6 @@
 package com.k2.testapp.k2javavulnerableperf.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,7 +19,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/rxss")
@@ -33,6 +34,12 @@ public class ReflectedXSS {
     public static final String PAYLOAD = "payload";
     public static final String PAYLOAD_PARAM_NOT_FOUND = "payload param not found";
     public static final String UNABLE_TO_URL_DECODE_THE_INPUT_S = "Unable to URL decode the input : %s";
+
+    public static final Set<String> expectedHeaders = new HashSet<>(Arrays.asList("accept","accept-encoding",
+            "accept-language", "connection", "cookie", "k2-fuzz-request-id", "user-agent", "host", "origin", "referer"
+    ));
+
+    public static final String S_BR_FOLLOWING_IS_THE_LIST_OF_UNEXPECTED_HEADERS_ARE_S = "%s<br>Following is the list of unexpected headers are : %s";
 
     public static String BASE_TEMPLATE = "<html><body><p>Hello %s</p></body></html>";
 
@@ -130,6 +137,30 @@ public class ReflectedXSS {
     ) {
 
         String output = String.format(BASE_TEMPLATE, payload);
+
+        return output;
+    }
+
+    @Hidden
+    @RequestMapping(value = "/checkunwantedheader", method = RequestMethod.GET)
+    @Operation(summary = "Reverts a welcome message with the content of `payload` header parameter along with a list of unwanted header fields from request along with ")
+    public String sendResponseUnwantedHeader(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload")
+    })
+             @RequestHeader String payload,
+             @RequestHeader Map<String, String> headers
+    ) {
+        Map<String, String> unexpectedHeaders = new HashMap<>();
+        if(headers != null && !headers.isEmpty()){
+            for(String key : headers.keySet()){
+                if(!expectedHeaders.contains(key) && !StringUtils.equals(key, PAYLOAD)){
+                    unexpectedHeaders.put(key, headers.get(key));
+                }
+            }
+        }
+
+        String consolidatedPayload = String.format(S_BR_FOLLOWING_IS_THE_LIST_OF_UNEXPECTED_HEADERS_ARE_S, payload, unexpectedHeaders);
+        String output = String.format(BASE_TEMPLATE, consolidatedPayload);
 
         return output;
     }
