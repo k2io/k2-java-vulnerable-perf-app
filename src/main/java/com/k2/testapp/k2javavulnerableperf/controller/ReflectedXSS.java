@@ -9,15 +9,13 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.HtmlUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -42,6 +40,24 @@ public class ReflectedXSS {
     public static final String S_BR_FOLLOWING_IS_THE_LIST_OF_UNEXPECTED_HEADERS_ARE_S = "%s<br>Following are the unexpected headers : %s";
 
     public static String BASE_TEMPLATE = "<html><body><p>Hello %s</p></body></html>";
+
+    @RequestMapping(value = "/multiParam", method = RequestMethod.GET)
+    @Operation(summary = "Reverts a welcome message with the content of `payload` parameter with optional payloadExtension param")
+    public String sendResponseByQueryParamMulti(@Parameter(name = "payload", description = "Data to construct the welcome message", examples = {
+            @ExampleObject(summary = "Normal Case", value = "USER", name = "Normal Payload"),
+            @ExampleObject(summary = "Attack Case", value = "USER <script>alert('attack')</script>", name = "Attack Payload")
+
+    }) @RequestParam String payload,
+
+        @Parameter(name = "payloadExtension", description = "Extra data to construct the welcome message", examples = {
+                @ExampleObject(summary = "Normal Case", value = "EXT", name = "Normal Payload"),
+                @ExampleObject(summary = "Attack Case", value = "USER <script>alert('attack from ext')</script>", name = "Attack Payload")
+        }) @RequestParam(defaultValue = "EXT") String payloadExtension
+    ) {
+        String output = EMPTT;
+        output = String.format(BASE_TEMPLATE, payload + StringUtils.SPACE + payloadExtension);
+        return output;
+    }
 
     @RequestMapping(value = "/{payload}", method = RequestMethod.GET)
     @Operation(summary = "Reverts a welcome message with the content of `payload` path parameter")
