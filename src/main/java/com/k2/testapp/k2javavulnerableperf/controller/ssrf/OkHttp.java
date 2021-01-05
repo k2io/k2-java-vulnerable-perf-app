@@ -43,9 +43,12 @@ public class OkHttp {
             Response response1 =  client.newCall(new Request.Builder().get().url(url).build()).execute();
             response = String.valueOf(response1.code());
             response1.body().close();
-            client.getConnectionPool().evictAll();
         } catch (Exception e) {
             return String.format(ERROR_WHILE_FETCHING_URL_S_S_S, url, e.getMessage(), e.getCause());
+        } finally {
+            try{
+                client.getConnectionPool().evictAll();
+            }catch (Throwable e){}
         }
         return response;
     }
