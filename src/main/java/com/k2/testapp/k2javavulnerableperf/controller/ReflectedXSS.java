@@ -31,7 +31,7 @@ public class ReflectedXSS {
     public static final String COUNT = "count";
     public static final String PAYLOAD = "payload";
     public static final String PAYLOAD_PARAM_NOT_FOUND = "payload param not found";
-    public static final String UNABLE_TO_URL_DECODE_THE_INPUT_S = "Unable to URL decode the input : %s";
+    public static final String UNABLE_TO_HTML_ESCAPE_THE_INPUT_S = "Unable to HTML escape the input : %s";
 
     public static final Set<String> expectedHeaders = new HashSet<>(Arrays.asList("accept","accept-encoding",
             "accept-language", "connection", "cookie", "k2-fuzz-request-id", "user-agent", "host", "origin", "referer"
@@ -135,7 +135,7 @@ public class ReflectedXSS {
 
             } catch (Exception e) {
                 throw new ResponseStatusException(
-                        HttpStatus.UNPROCESSABLE_ENTITY, String.format(UNABLE_TO_URL_DECODE_THE_INPUT_S,  payload));
+                        HttpStatus.UNPROCESSABLE_ENTITY, String.format(UNABLE_TO_HTML_ESCAPE_THE_INPUT_S,  payload));
             }
         } else {
             throw new ResponseStatusException(
